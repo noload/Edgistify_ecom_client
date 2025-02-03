@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom"; 
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import { fetchProducts } from "../redux/productActions";
 
 const ProductPage = () => {
   const { category } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const {
     items: products,
     loading,
@@ -61,8 +61,12 @@ const ProductPage = () => {
                     }}
                   />
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-truncate">{product.title}</h5>
-                    <p className="card-text fw-bold text-danger">${product.price.toFixed(2)}</p>
+                    <h5 className="card-title text-truncate">
+                      {product.title}
+                    </h5>
+                    <p className="card-text fw-bold text-danger">
+                      ${product.price.toFixed(2)}
+                    </p>
                     <button
                       className="btn btn-primary mt-auto"
                       onClick={() => handleViewDetails(product._id)}

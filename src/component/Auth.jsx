@@ -38,8 +38,7 @@ const AuthPage = () => {
   React.useEffect(() => {
     if (isAuthenticated) {
       navigate("/products/all");
-    }
-    if (isUserRegistered) {
+    } else if (isUserRegistered) {
       Swal.fire("Success!", "User Registered successfully", "success");
       Swal.fire({
         title: "✅ User Registered successfully!",

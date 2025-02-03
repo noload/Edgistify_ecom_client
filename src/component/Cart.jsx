@@ -28,7 +28,9 @@ const CartPage = () => {
 
   const handleQuantityChange = (id, change) => {
     const updatedCart = cart.map((item) =>
-      item._id === id ? { ...item, quantity: Math.max(1, item.quantity + change) } : item
+      item._id === id
+        ? { ...item, quantity: Math.max(1, item.quantity + change) }
+        : item
     );
     dispatch(addToCart(updatedCart));
   };
@@ -47,11 +49,11 @@ const CartPage = () => {
 
   function loadScript(src) {
     return new Promise((resolve) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
     });
   }
 
@@ -66,19 +68,23 @@ const CartPage = () => {
     }
 
     const res = await loadScript(
-        "https://checkout.razorpay.com/v1/checkout.js"
+      "https://checkout.razorpay.com/v1/checkout.js"
     );
 
     if (!res) {
-        alert("Razorpay SDK failed to load. Are you online?");
-        return;
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
     }
 
     try {
       const orderData = {
         shippingAddress: address,
         orderCost,
-        orderItems: cart.map(({ _id, title, quantity }) => ({ _id, title, quantity })),
+        orderItems: cart.map(({ _id, title, quantity }) => ({
+          _id,
+          title,
+          quantity,
+        })),
       };
       const order = await dispatch(createOrder(orderData, token));
 
@@ -106,7 +112,7 @@ const CartPage = () => {
               icon: "success",
             });
 
-            dispatch(addToCart([])); 
+            dispatch(addToCart([]));
           } catch (error) {
             Swal.fire({
               title: "Payment Failed",
@@ -139,105 +145,136 @@ const CartPage = () => {
 
   return (
     <div>
-         <Navbar />
-    <div className="container my-5">
-      <h2 className="text-center mb-4">🛒 Your Shopping Cart</h2>
+      <Navbar />
+      <div className="container my-5">
+        <h2 className="text-center mb-4">🛒 Your Shopping Cart</h2>
 
-      {cart.length === 0 ? (
-        <div className="alert alert-info text-center">Your cart is empty.</div>
-      ) : (
-        <>
-          <div className="table-responsive shadow-sm p-3 bg-white rounded">
-            <table className="table table-hover align-middle">
-              <thead className="table-primary text-center">
-                <tr>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {cart.map((item) => (
-                  <tr key={item._id}>
-                    <td className="d-flex align-items-center">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="me-2 rounded"
-                        style={{ width: "50px", height: "50px", objectFit: "cover" }}
-                      />
-                      <span>{item.title}</span>
-                    </td>
-                    <td className="fw-bold text-success">${item.price.toFixed(2)}</td>
-                    <td className="fw-bold">
-                      <button
-                        className="btn btn-sm btn-outline-secondary"
-                        onClick={() => handleQuantityChange(item._id, -1)}
-                      >
-                        ➖
-                      </button>
-                      <span className="mx-2">{item.quantity}</span>
-                      <button
-                        className="btn btn-sm btn-outline-secondary"
-                        onClick={() => handleQuantityChange(item._id, 1)}
-                      >
-                        ➕
-                      </button>
-                    </td>
-                    <td className="fw-bold text-primary">${(item.quantity * item.price).toFixed(2)}</td>
-                    <td>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleRemove(item._id)}>
-                        ❌ Remove
-                      </button>
-                    </td>
+        {cart.length === 0 ? (
+          <div className="alert alert-info text-center">
+            Your cart is empty.
+          </div>
+        ) : (
+          <>
+            <div className="table-responsive shadow-sm p-3 bg-white rounded">
+              <table className="table table-hover align-middle">
+                <thead className="table-primary text-center">
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="row mt-4">
-            <div className="col-md-6">
-              <button className="btn btn-danger w-100" onClick={handleClearCart}>
-                🗑️ Clear Cart
-              </button>
+                </thead>
+                <tbody className="text-center">
+                  {cart.map((item) => (
+                    <tr key={item._id}>
+                      <td className="d-flex align-items-center">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="me-2 rounded"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <span>{item.title}</span>
+                      </td>
+                      <td className="fw-bold text-success">
+                        ${item.price.toFixed(2)}
+                      </td>
+                      <td className="fw-bold">
+                        <button
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => handleQuantityChange(item._id, -1)}
+                        >
+                          ➖
+                        </button>
+                        <span className="mx-2">{item.quantity}</span>
+                        <button
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => handleQuantityChange(item._id, 1)}
+                        >
+                          ➕
+                        </button>
+                      </td>
+                      <td className="fw-bold text-primary">
+                        ${(item.quantity * item.price).toFixed(2)}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => handleRemove(item._id)}
+                        >
+                          ❌ Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="col-md-6 text-end">
-              <div className="card shadow-lg p-4 bg-light">
-                <h4 className="text-center text-dark mb-3">📦 Order Summary</h4>
-                <p><strong>Subtotal:</strong> ${orderCost.subTotal.toFixed(2)}</p>
-                <p><strong>Rain Fee:</strong> ${orderCost.rainFee.toFixed(2)}</p>
-                <p><strong>Platform Fee:</strong> ${orderCost.platformFee.toFixed(2)}</p>
-                <p><strong>Delivery Fee:</strong> ${orderCost.deliveryFee.toFixed(2)}</p>
-                <p><strong>Cart Fee:</strong> ${orderCost.cartFee.toFixed(2)}</p>
-                <hr />
-                <h5 className="fw-bold text-danger">Total: ${orderCost.totalCost.toFixed(2)}</h5>
-              </div>
-              <div className="mt-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter your shipping address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-              <button
-                className="btn btn-primary mt-3 w-100"
-                onClick={handleCheckout}
-                disabled={!address.trim()}
-              >
-                ✅ Proceed to Checkout
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-    </div>
 
+            <div className="row mt-4">
+              <div className="col-md-6">
+                <button
+                  className="btn btn-danger w-100"
+                  onClick={handleClearCart}
+                >
+                  🗑️ Clear Cart
+                </button>
+              </div>
+              <div className="col-md-6 text-end">
+                <div className="card shadow-lg p-4 bg-light">
+                  <h4 className="text-center text-dark mb-3">
+                    📦 Order Summary
+                  </h4>
+                  <p>
+                    <strong>Subtotal:</strong> ${orderCost.subTotal.toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Rain Fee:</strong> ${orderCost.rainFee.toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Platform Fee:</strong> $
+                    {orderCost.platformFee.toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Delivery Fee:</strong> $
+                    {orderCost.deliveryFee.toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Cart Fee:</strong> ${orderCost.cartFee.toFixed(2)}
+                  </p>
+                  <hr />
+                  <h5 className="fw-bold text-danger">
+                    Total: ${orderCost.totalCost.toFixed(2)}
+                  </h5>
+                </div>
+                <div className="mt-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter your shipping address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-primary mt-3 w-100"
+                  onClick={handleCheckout}
+                  disabled={!address.trim()}
+                >
+                  ✅ Proceed to Checkout
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 

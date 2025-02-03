@@ -10,20 +10,20 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const { loading, error, items } = useSelector((state) => state.products);
   const { cart } = useSelector((state) => state.cart);
-  const [isExistInCart ,setIsExistInCart]= useState(false)
+  const [isExistInCart, setIsExistInCart] = useState(false);
 
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
 
-  const navigator = useNavigate()
+  const navigator = useNavigate();
 
   useEffect(() => {
     setProduct(items.find((item) => item._id === id));
-    const exist = cart.find((item) => item._id == id)
+    const exist = cart.find((item) => item._id == id);
     if (exist) {
-      setIsExistInCart(true)
+      setIsExistInCart(true);
     }
-  }, [id, items,isExistInCart,cart]);
+  }, [id, items, isExistInCart, cart]);
 
   useEffect(() => {
     const productDetails = items.find((item) => item._id === id);
@@ -34,12 +34,14 @@ const ProductDetails = () => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity + change));
   };
 
-  const viewCart = ()=>{
-    navigator("/cart")
-  }
+  const viewCart = () => {
+    navigator("/cart");
+  };
   const handleAddToCart = () => {
     let cartItems = [...cart];
-    const productIndex = cartItems.findIndex((item) => item._id === product._id);
+    const productIndex = cartItems.findIndex(
+      (item) => item._id === product._id
+    );
 
     if (productIndex !== -1) {
       cartItems[productIndex] = {
@@ -54,7 +56,9 @@ const ProductDetails = () => {
 
     Swal.fire({
       title: "✅ Added to Cart!",
-      text: `${product.title} (${quantity} item${quantity > 1 ? "s" : ""}) added to your cart.`,
+      text: `${product.title} (${quantity} item${
+        quantity > 1 ? "s" : ""
+      }) added to your cart.`,
       icon: "success",
       timer: 2000,
       showConfirmButton: false,
@@ -88,7 +92,9 @@ const ProductDetails = () => {
             <div className="col-lg-6">
               <h2 className="fw-bold text-dark">{product.title}</h2>
               <p className="text-muted">{product.description}</p>
-              <h4 className="fw-bold text-danger">${product.price.toFixed(2)}</h4>
+              <h4 className="fw-bold text-danger">
+                ${product.price.toFixed(2)}
+              </h4>
 
               <div className="d-flex align-items-center my-3">
                 <button
@@ -101,7 +107,9 @@ const ProductDetails = () => {
                   type="number"
                   className="form-control text-center"
                   value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                  onChange={(e) =>
+                    setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))
+                  }
                   style={{ width: "60px" }}
                 />
                 <button
@@ -112,8 +120,11 @@ const ProductDetails = () => {
                 </button>
               </div>
 
-              <button className="btn btn-primary w-100 py-2 mt-2" onClick={isExistInCart?viewCart:handleAddToCart}>
-               {isExistInCart ? " 🛒 view  cart": "🛒 Add to Cart"}
+              <button
+                className="btn btn-primary w-100 py-2 mt-2"
+                onClick={isExistInCart ? viewCart : handleAddToCart}
+              >
+                {isExistInCart ? " 🛒 view  cart" : "🛒 Add to Cart"}
               </button>
             </div>
           </div>

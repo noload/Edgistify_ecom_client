@@ -25,7 +25,6 @@ const cartSlice = createSlice({
     addToCartSuccess: (state, action) => {
       state.loading = false;
       state.cart = action.payload.orderItems;
-      console.log(state.cart);
       state.orderCost = action.payload.orderCost;
     },
     addToCartFailure: (state, action) => {
