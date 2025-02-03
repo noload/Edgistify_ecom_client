@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://edgistify-ecom-server.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const loginUser = async (email, password) => {
   try {
