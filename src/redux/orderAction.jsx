@@ -30,7 +30,7 @@ export const validatePayment = (paymentData, token) => async (dispatch) => {
   dispatch(validatePaymentStart());
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/order/validate-payment",
+      `${API_URL}/api/order/validate-payment`,
       paymentData,
       { headers: { Authorization: `Bearer ${token}` } }
     );
